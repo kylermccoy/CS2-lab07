@@ -3,8 +3,6 @@ package connectfour;
 /**
  * A custom exception thrown from any of the Connect Four classes if something
  * goes wrong.
- *
- * @author RIT CS
  */
 public class ConnectFourException extends Exception {
     /**

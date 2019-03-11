@@ -2,10 +2,13 @@ package connectfour;
 
 /**
  * A basic implementation of the Connect Four game.
- *
- * @author RIT CS
  */
 public class ConnectFour {
+    /** the number of rows */
+    public final static int ROWS = 6;
+    /** the number of columns */
+    public final static int COLS = 7;
+
     /**
      * Used to indicate a move that has been made on the board.
      */
@@ -61,7 +64,7 @@ public class ConnectFour {
      * rows (6) and columns (7).
      */
     public ConnectFour() {
-        this(6, 7);
+        this(ROWS, COLS);
     }
 
     /**
@@ -104,7 +107,7 @@ public class ConnectFour {
         }
         else {
             int dropTo = 0;
-            for(int r=1; r<rows && board[column][r] == Move.NONE; r++) {
+            for(int r = 1; r<rows && board[column][r] == Move.NONE; r++) {
                 dropTo = r;
             }
             board[column][dropTo] = move;
@@ -125,7 +128,7 @@ public class ConnectFour {
     public boolean hasWonGame() {
         Move player = board[lastCol][lastRow];
 
-        // check left horizontal
+          // check left horizontal
         if (this.lastCol >= 3) {
             int count = 1;
             for (int col=this.lastCol-1; col>this.lastCol-4; --col) {
@@ -165,7 +168,7 @@ public class ConnectFour {
         }
 
         // check diagonally to left
-        if (this.lastRow <= 2) {
+        if (this.lastRow <= 2 && this.lastCol >= 3) {
             int count = 1;
             int col = this.lastCol - 1;
             for (int row = this.lastRow + 1; row < this.lastRow + 4; ++row) {
@@ -180,7 +183,7 @@ public class ConnectFour {
         }
 
         // check diagonally to right
-        if (this.lastRow <= 2) {
+        if (this.lastRow <= 2 && this.lastCol <= 3) {
             int count = 1;
             int col = this.lastCol + 1;
             for (int row = this.lastRow + 1; row < this.lastRow + 4; ++row) {
@@ -193,8 +196,24 @@ public class ConnectFour {
                 return true;
             }
         }
-
         return false;
+    }
+
+    /**
+     * Checks to see if the game is tied - no NONE moves left in board.  This
+     * is called after hasGameWon.
+     *
+     * @return whether game is tied or not
+     */
+    public boolean hasTiedGame() {
+        for (int row=0; row<rows; ++row) {
+            for (int col=0; col<cols; ++col) {
+                if (board[col][row] == Move.NONE) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
