@@ -2,6 +2,7 @@
   <configuration default="false" name="ConnectFourServer" type="Application" factoryName="Application" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="connectfour.server.ConnectFourServer" />
     <module name="ConnectFour" />
+    <option name="PROGRAM_PARAMETERS" value="8080" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="connectfour.server.*" />
