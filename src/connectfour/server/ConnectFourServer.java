@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 /**
@@ -111,6 +112,9 @@ public class ConnectFourServer {
             c1out.println(ConnectFourProtocol.ERROR) ;
             c2out.println(ConnectFourProtocol.ERROR) ;
             System.out.println(ConnectFourProtocol.ERROR) ;
+        }
+        catch(NoSuchElementException ex){
+            System.out.println("\n" + ConnectFourProtocol.ERROR + " : A Client has disconnected!") ;
         }
     }
 }

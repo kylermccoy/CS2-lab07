@@ -7,6 +7,7 @@ import connectfour.ConnectFourProtocol;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 /**
@@ -61,32 +62,38 @@ public class ConnectFourClient {
             ConnectFour game = new ConnectFour() ;
             System.out.println(game) ;
             while(true){
-                String response = networkin.nextLine() ;
-                if(response.equals(ConnectFourProtocol.MAKE_MOVE)){
-                    System.out.print("Your turn! Enter a column: ") ;
-                    int number = prompt.nextInt() ;
-                    networkout.println(number) ;
+                try {
+                    String response = networkin.nextLine();
+                    if(response.equals(ConnectFourProtocol.MAKE_MOVE)){
+                        System.out.print("Your turn! Enter a column: ") ;
+                        int number = prompt.nextInt() ;
+                        networkout.println(number) ;
+                    }
+                    if(response.contains(ConnectFourProtocol.MOVE_MADE)){
+                        int number = Integer.parseInt(String.valueOf(response.charAt(response.length()-1))) ;
+                        System.out.println("A move has been made in column " + number + "!") ;
+                        game.makeMove(number) ;
+                        System.out.println(game) ;
+                    }
+                    if(response.equals(ConnectFourProtocol.GAME_WON)){
+                        System.out.println("You win! Yay!") ;
+                        break ;
+                    }
+                    if(response.equals(ConnectFourProtocol.GAME_LOST)){
+                        System.out.println("You lose! Nice try!") ;
+                        break ;
+                    }
+                    if(response.equals(ConnectFourProtocol.GAME_TIED)){
+                        System.out.println("You tied!");
+                        break ;
+                    }
+                    if(response.equals(ConnectFourProtocol.ERROR)){
+                        System.out.println(ConnectFourProtocol.ERROR) ;
+                        break ;
+                    }
                 }
-                if(response.contains(ConnectFourProtocol.MOVE_MADE)){
-                    int number = Integer.parseInt(String.valueOf(response.charAt(response.length()-1))) ;
-                    System.out.println("A move has been made in column " + number + "!") ;
-                    game.makeMove(number) ;
-                    System.out.println(game) ;
-                }
-                if(response.equals(ConnectFourProtocol.GAME_WON)){
-                    System.out.println("You win! Yay!") ;
-                    break ;
-                }
-                if(response.equals(ConnectFourProtocol.GAME_LOST)){
-                    System.out.println("You lose! Nice try!") ;
-                    break ;
-                }
-                if(response.equals(ConnectFourProtocol.GAME_TIED)){
-                    System.out.println("You tied!");
-                    break ;
-                }
-                if(response.equals(ConnectFourProtocol.ERROR)){
-                    System.out.println(ConnectFourProtocol.ERROR) ;
+                catch(NoSuchElementException ex){
+                    System.out.println("The other player has disconnected!\nYou win! Yay!") ;
                     break ;
                 }
             }
