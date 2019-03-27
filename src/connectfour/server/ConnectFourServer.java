@@ -65,6 +65,13 @@ public class ConnectFourServer {
         }
     }
 
+    /***
+     * runs the game in a third party handshake fashion between the two clients
+     * @param c1in scanner for player 1
+     * @param c1out printstream for player 1
+     * @param c2in scanner for player 2
+     * @param c2out printstream for player 2
+     */
     private static void gameStart(Scanner c1in, PrintStream c1out, Scanner c2in, PrintStream c2out){
         try {
             ConnectFour game = new ConnectFour();

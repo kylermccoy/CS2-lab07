@@ -56,6 +56,12 @@ public class ConnectFourClient {
             System.out.println("Server invalid or unavailable!");
         }
     }
+
+    /***
+     * runs a local version of the game and communicates with server
+     * @param networkin scanner for server
+     * @param networkout printstream for server
+     */
     private static void gameStart(Scanner networkin, PrintStream networkout){
         try{
             Scanner prompt = new Scanner(System.in) ;
