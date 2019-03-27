@@ -37,6 +37,7 @@ public class ConnectFourClient {
         String hostname = args[0];
         int port = Integer.parseInt(args[1]);
         try{
+            System.out.println("Waiting to connect...");
             Socket socket = new Socket(hostname,port) ;
             Scanner networkin = new Scanner(socket.getInputStream()) ;
             PrintStream networkout = new PrintStream(socket.getOutputStream()) ;
