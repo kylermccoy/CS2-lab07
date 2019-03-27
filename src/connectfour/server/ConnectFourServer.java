@@ -14,7 +14,7 @@ import java.util.Scanner;
  * The server waits for incoming client connections and pairs them off
  * to play the game.
  *
- * @author YOUR NAME HERE
+ * @author Kyle McCoy
  */
 public class ConnectFourServer {
 
@@ -35,6 +35,7 @@ public class ConnectFourServer {
         try {
             int port = Integer.parseInt(args[0]);
             ServerSocket serverSocket = new ServerSocket(port);
+            System.out.println("Waiting for players to connect...");
 
             Socket client1 = serverSocket.accept() ;
             Socket client2 = serverSocket.accept() ;
@@ -47,33 +48,63 @@ public class ConnectFourServer {
             PrintStream client2networkout = new PrintStream(client2.getOutputStream()) ;
             client2networkout.println(ConnectFourProtocol.CONNECT) ;
 
+            System.out.println("Players Connected!") ;
             gameStart(client1networkin,client1networkout,client2networkin,client2networkout);
+
+            client1.shutdownInput() ;
+            client1.shutdownOutput() ;
+
+            client2.shutdownInput() ;
+            client2.shutdownOutput() ;
+
+            serverSocket.close() ;
         }
         catch(IOException ex){
-            System.out.println(ConnectFourProtocol.ERROR);
+            ex.printStackTrace();
         }
     }
 
-    public static void gameStart(Scanner c1in, PrintStream c1out, Scanner c2in, PrintStream c2out){
+    private static void gameStart(Scanner c1in, PrintStream c1out, Scanner c2in, PrintStream c2out){
         try {
             ConnectFour game = new ConnectFour();
-            int turn = 1;
+            System.out.println(game);
+            int turn = -1;
             while ((!game.hasWonGame()) && (!game.hasTiedGame())) {
+                turn *= -1;
                 if (turn == 1) {
+                    System.out.println("Player 1's Turn!");
                     c1out.println(ConnectFourProtocol.MAKE_MOVE);
                     int number = Integer.parseInt(c1in.nextLine());
                     game.makeMove(number);
+                    System.out.println("Move made at column " + number + "!");
                     c1out.println(ConnectFourProtocol.MOVE_MADE + " " + number);
                     c2out.println(ConnectFourProtocol.MOVE_MADE + " " + number);
                 }
                 if(turn == -1){
-                    c1out.println(ConnectFourProtocol.MAKE_MOVE) ;
+                    System.out.println("Player 2's Turn!");
+                    c2out.println(ConnectFourProtocol.MAKE_MOVE) ;
                     int number = Integer.parseInt(c2in.nextLine()) ;
                     game.makeMove(number) ;
+                    System.out.println("Move made at column " + number + "!");
                     c2out.println(ConnectFourProtocol.MOVE_MADE + " " + number);
                     c1out.println(ConnectFourProtocol.MOVE_MADE + " " + number);
                 }
-                turn *= -1;
+                System.out.println(game);
+            }
+            if(game.hasWonGame()){
+                if(turn == 1){
+                    System.out.println("Player 1 Won! Player 2 Lost!");
+                    c1out.println(ConnectFourProtocol.GAME_WON) ;
+                    c2out.println(ConnectFourProtocol.GAME_LOST) ;
+                }else{
+                    System.out.println("Player 2 Won! Player 1 Lost!");
+                    c2out.println(ConnectFourProtocol.GAME_WON) ;
+                    c1out.println(ConnectFourProtocol.GAME_LOST) ;
+                }
+            }else{
+                System.out.println("Players Tied!");
+                c1out.println(ConnectFourProtocol.GAME_TIED) ;
+                c2out.println(ConnectFourProtocol.GAME_TIED) ;
             }
         }
         catch(ConnectFourException ex){
